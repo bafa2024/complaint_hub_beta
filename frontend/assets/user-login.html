@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Login</title>
+</head>
+<body>
+    <form id="loginForm">
+        <input type="email" id="email" placeholder="Email" required><br>
+        <input type="password" id="password" placeholder="Password" required><br>
+        <button type="submit">Login</button>
+    </form>
+    <div id="loginStatus"></div>
+    <script src="js/auth.js"></script>
+    <script>
+    document.getElementById('loginForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const resp = await fetch('http://127.0.0.1:8000/api/v1/auth/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `username=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+        });
+        if (resp.ok) {
+            const data = await resp.json();
+            setToken(data.access_token);
+            document.getElementById('loginStatus').textContent = 'Login successful!';
+            window.location.href = 'user-dashboard.html';
+        } else {
+            document.getElementById('loginStatus').textContent = 'Login failed!';
+        }
+    };
+    </script>
+</body>
+</html>
