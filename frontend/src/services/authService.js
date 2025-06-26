@@ -1,22 +1,55 @@
-// src/services/authService.js
 import apiClient from "./apiClient";
 
-export async function signup({ email, password }) {
-  const res = await apiClient.post("/auth/signup", { email, password });
-  return res.data;
-}
+const authService = {
+  signup: async ({ name, email, phone, password }) => {
+    console.log("authService.signup sending:", { name, email, phone, password });
+    
+    const res = await apiClient.post("/auth/signup", { 
+      name, 
+      email, 
+      phone, 
+      password 
+    });
+    return res.data;
+  },
 
-export async function login({ email, password }) {
-  const res = await apiClient.post("/auth/login", { email, password });
-  // { access_token, token_type }
-  return res.data;
-}
+  login: async ({ email, password }) => {
+    // Create form data for OAuth2 format
+    const formData = new URLSearchParams();
+    formData.append('username', email);
+    formData.append('password', password);
+    
+    const res = await apiClient.post("/auth/login", formData, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+    return res.data;
+  },
 
-export async function getCurrentUser(token) {
-  const res = await apiClient.get("/auth/me", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return res.data;
-}
+  getCurrentUser: async () => {
+    const res = await apiClient.get("/auth/me");
+    return res.data;
+  },
 
-export default { signup, login, getCurrentUser };
+  logout: () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userRole');
+    window.location.href = '/';
+  },
+
+  brandLogin: async (email, password) => {
+    const formData = new URLSearchParams();
+    formData.append('username', email);
+    formData.append('password', password);
+    
+    const res = await apiClient.post("/auth/brand-login", formData, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+    return res.data;
+  }
+};
+
+export default authService;

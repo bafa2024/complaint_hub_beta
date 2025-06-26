@@ -1,6 +1,7 @@
+# backend/app/crud.py
 from sqlalchemy.orm import Session
 from app import models, schemas
-from app.utils import hash_password
+from app.utils import get_password_hash  # Changed from hash_password
 
 def get_user_by_email(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
@@ -9,12 +10,15 @@ def get_user_by_id(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
 
 def create_user(db: Session, user: schemas.UserCreate):
-    hashed = hash_password(user.password)
+    hashed = get_password_hash(user.password)  # This now uses the correct function
     db_user = models.User(
         name=user.name,
         email=user.email,
         phone=user.phone,
-        password_hash=hashed
+        hashed_password=hashed,
+        is_active=True,
+        is_brand=False,
+        is_admin=False
     )
     db.add(db_user)
     db.commit()

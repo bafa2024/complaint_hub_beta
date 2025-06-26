@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export default function UserSignup() {
-  const { signup } = useContext(AuthContext);
+  const { signup } = useContext(AuthContext);  // This is the correct way
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -39,15 +39,56 @@ export default function UserSignup() {
     
     setLoading(true);
     try {
+      console.log("Submitting signup form:", {
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        password: "***hidden***"
+      });
+      
+      // Use signup from AuthContext
       await signup({
         name: form.name,
         email: form.email,
         phone: form.phone,
         password: form.password,
       });
-      navigate("/user/dashboard", { replace: true });
-    } catch (e) {
-      setError(e.response?.data?.detail || "Signup failed");
+      
+      console.log("Signup successful!");
+      
+      // Show success and redirect to login
+      alert("Account created successfully! Please login with your credentials.");
+      navigate("/user/login", { replace: true });
+      
+    } catch (error) {
+      console.error("=== SIGNUP ERROR ===");
+      console.error("Full error object:", error);
+      
+      if (error.response) {
+        console.error("Error response status:", error.response.status);
+        console.error("Error response data:", error.response.data);
+        
+        // Handle different error formats
+        if (error.response.data?.detail) {
+          if (typeof error.response.data.detail === 'string') {
+            setError(error.response.data.detail);
+          } else if (Array.isArray(error.response.data.detail)) {
+            // Pydantic validation errors
+            const firstError = error.response.data.detail[0];
+            setError(firstError?.msg || "Validation failed");
+          } else {
+            setError(JSON.stringify(error.response.data.detail));
+          }
+        } else {
+          setError(`Error ${error.response.status}: ${error.response.statusText}`);
+        }
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+        setError("No response from server. Please check if the backend is running.");
+      } else {
+        console.error("Error setting up request:", error.message);
+        setError("Error: " + error.message);
+      }
     } finally {
       setLoading(false);
     }

@@ -1,68 +1,39 @@
-# app/main.py
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.api.v1.routes import webhook, tickets, analytics, auth
+from app.database import engine
+from app.db.base_class import Base
+from app.models import User, Brand, Ticket  # Import all models
+
+# Create tables on startup
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Complaint Hub API v1")
 
-# Health check
-@app.get("/health", tags=["health"])
-async def health_check():
-    return {"status": "ok"}
-# === Temporarily disable Sentry until you install sentry-sdk ===
-# import sentry_sdk
-# from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
-# sentry_sdk.init(dsn=settings.SENTRY_DSN)
-
-import os
-class Settings:
-    REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
-    SENTRY_DSN = os.getenv('SENTRY_DSN', '')
-
-settings = Settings()
-
-# Celery for background tasks
-from celery import Celery
-
-celery_app = Celery(
-    "complainthub",
-    broker=settings.REDIS_URL,
-    backend=settings.REDIS_URL
-)
-
-@celery_app.task
-def send_follow_up_call(ticket_id: int):
-    # Your follow-up call logic here
-    pass
-
-# Create FastAPI app
-app = FastAPI(title="Complaint Hub API v1")
-
-# Add CORS (adjust to your Render static site URL)
+# CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        "https://<your-frontend>.onrender.com"  # ← replace with your actual Render URL
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# === If/when you install sentry-sdk, re-enable these: ===
-# app.add_middleware(SentryAsgiMiddleware)
-
-# Import and mount your routers AFTER middleware
-from app.api.v1.routes import webhook, tickets, analytics, auth
-
+# Include routers
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["auth"])
 app.include_router(webhook.router, prefix="/api/v1/webhook", tags=["webhook"])
 app.include_router(tickets.router, prefix="/api/v1/tickets", tags=["tickets"])
 app.include_router(analytics.router, prefix="/api/v1/analytics", tags=["analytics"])
 
-
 @app.get("/")
 def root():
     return {"status": "API is running"}
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
