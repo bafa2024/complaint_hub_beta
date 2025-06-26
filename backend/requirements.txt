@@ -7,3 +7,5 @@ passlib[bcrypt]
 python-jose[cryptography]
 python-dotenv
 sentry-sdk>=1.10.0
+celery>=5.3.0
+redis>=4.5.0
