@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../../contexts/AuthContext';
 import ticketService from '../../services/ticketService';
 import authService from '../../services/authService';
 
 export default function UserDashboard() {
+  const { user } = useContext(AuthContext);
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showVoiceModal, setShowVoiceModal] = useState(false);
@@ -10,6 +12,11 @@ export default function UserDashboard() {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [rating, setRating] = useState(0);
+
+  // Debug: Log user data
+  useEffect(() => {
+    console.log('Current user in dashboard:', user);
+  }, [user]);
 
   useEffect(() => {
     loadTickets();
@@ -135,9 +142,9 @@ const websocketService = {
               🔔 <span style={styles.notificationBadge}>3</span>
             </div>
             <div style={styles.userMenu}>
-               <div style={{ fontWeight: "bold" }}>
-                {user ? `Hello, ${user.name}` : ""}
-               </div>
+              <div style={styles.userName}>
+                {user ? `Hello, ${user.name}` : "Loading..."}
+              </div>
               <button style={styles.btnSecondary}>Settings</button>
               <button onClick={handleLogout} style={styles.btnPrimary}>Logout</button>
             </div>
@@ -148,7 +155,7 @@ const websocketService = {
       {/* Main Content */}
       <main style={styles.mainContent}>
         <div style={styles.welcomeSection}>
-          <h1>Welcome back, John!</h1>
+          <h1>Welcome back, {user?.name || 'User'}!</h1>
           <p>Track and manage all your complaints in one place</p>
         </div>
 
@@ -407,6 +414,12 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
+  },
+  userName: {
+    fontWeight: '600',
+    color: '#2c3e50',
+    marginRight: '15px',
+    fontSize: '15px',
   },
   mainContent: {
     marginTop: '80px',

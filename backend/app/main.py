@@ -17,7 +17,7 @@ app.add_middleware(
     CORSMiddleware,
    allow_origins=["https://complaint-hub-beta.onrender.com"],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET","POST","PUT","PATCH","DELETE","OPTIONS"],
     allow_headers=["*"],
 )
 
