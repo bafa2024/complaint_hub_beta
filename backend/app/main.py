@@ -8,7 +8,12 @@ from fastapi.middleware.cors import CORSMiddleware
 # from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 # sentry_sdk.init(dsn=settings.SENTRY_DSN)
 
-from app.core.config import settings  # <— make sure this points to your settings module
+import os
+class Settings:
+    REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+    SENTRY_DSN = os.getenv('SENTRY_DSN', '')
+
+settings = Settings()
 
 # Celery for background tasks
 from celery import Celery
