@@ -4,6 +4,8 @@ from app.api.v1.routes import webhook, tickets, analytics, auth
 from app.database import engine
 from app.db.base_class import Base
 from app.models import User, Brand, Ticket  # Import all models
+from dotenv import load_dotenv
+load_dotenv()  # reads .env into os.environ
 
 # Create tables on startup
 Base.metadata.create_all(bind=engine)
@@ -13,12 +15,7 @@ app = FastAPI(title="Complaint Hub API v1")
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-    ],
+   allow_origins=["https://complaint-hub-beta.onrender.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
