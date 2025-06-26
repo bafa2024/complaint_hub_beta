@@ -135,7 +135,9 @@ const websocketService = {
               🔔 <span style={styles.notificationBadge}>3</span>
             </div>
             <div style={styles.userMenu}>
-              <span>👤 John Doe</span>
+               <div style={{ fontWeight: "bold" }}>
+                {user ? `Hello, ${user.name}` : ""}
+               </div>
               <button style={styles.btnSecondary}>Settings</button>
               <button onClick={handleLogout} style={styles.btnPrimary}>Logout</button>
             </div>
