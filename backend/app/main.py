@@ -3,6 +3,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+app = FastAPI(title="Complaint Hub API v1")
+
+# Health check
+@app.get("/health", tags=["health"])
+async def health_check():
+    return {"status": "ok"}
 # === Temporarily disable Sentry until you install sentry-sdk ===
 # import sentry_sdk
 # from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
