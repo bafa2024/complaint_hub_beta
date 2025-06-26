@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'; // Add this import
 import ticketService from '../../services/ticketService';
 
 export default function HomePage() {
@@ -31,8 +32,8 @@ export default function HomePage() {
         <div style={styles.headerContainer}>
           <div style={styles.logo}>ComplaintHub</div>
           <div style={styles.navButtons}>
-            <a href="/user/login" style={styles.btnOutline}>Login</a>
-            <a href="/user/signup" style={styles.btnPrimary}>Sign Up</a>
+            <Link to="/user/login" style={styles.btnOutline}>Login</Link>
+            <Link to="/user/signup" style={styles.btnPrimary}>Sign Up</Link>
           </div>
         </div>
       </header>
@@ -42,100 +43,31 @@ export default function HomePage() {
         <h1 style={styles.heroTitle}>Voice Your Concerns</h1>
         <p style={styles.heroSubtitle}>Making Brands Accountable, One Voice at a Time</p>
         <div style={styles.heroButtons}>
-          <a href="/user/signup" style={styles.heroBtnPrimary}>Get Started</a>
+          <Link to="/user/signup" style={styles.heroBtnPrimary}>Get Started</Link>
           <button onClick={scrollToFeatures} style={styles.heroBtnSecondary}>How It Works</button>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" style={styles.features}>
-        <div style={styles.featuresGrid}>
-          <div style={styles.featureCard}>
-            <div style={styles.featureIcon}>📞</div>
-            <h3>Voice Complaints</h3>
-            <p>Call our AI-powered system to voice your complaints in your preferred language. No more typing long emails or filling complex forms.</p>
-          </div>
-          <div style={styles.featureCard}>
-            <div style={styles.featureIcon}>💬</div>
-            <h3>Multi-Channel Support</h3>
-            <p>Connect via WhatsApp, Telegram, Web Chat, or any platform you prefer. We're available wherever you are comfortable.</p>
-          </div>
-          <div style={styles.featureCard}>
-            <div style={styles.featureIcon}>🎯</div>
-            <h3>Real-Time Tracking</h3>
-            <p>Track your complaint status and get instant updates as brands respond. Never wonder about your complaint status again.</p>
-          </div>
-        </div>
-      </section>
+      {/* Rest of your component remains the same until CTA Section */}
 
-      {/* Recent Complaints Section */}
-      <section style={styles.complaintsSection}>
-        <div style={styles.sectionHeader}>
-          <h2>Recent Unresolved Complaints</h2>
-          <p>See how brands are handling customer issues</p>
-        </div>
-        
-        <div style={styles.complaintsContainer}>
-          {loading ? (
-            <p>Loading complaints...</p>
-          ) : recentComplaints.length > 0 ? (
-            recentComplaints.map((complaint) => (
-              <div key={complaint.id} style={styles.complaintCard}>
-                <div style={styles.brandName}>🏢 {complaint.brand_name || 'Unknown Brand'}</div>
-                <div style={styles.complaintSummary}>
-                  "{complaint.description}"
-                </div>
-                <div style={styles.complaintMeta}>
-                  <span>📅 Unresolved for {complaint.days_unresolved || 0} days</span>
-                  <span>👁 {complaint.views || 0} views</span>
-                  <span>📍 {complaint.location || 'India'}</span>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div style={styles.complaintCard}>
-              <p>No recent complaints to display</p>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section style={styles.stats}>
-        <div style={styles.statsContainer}>
-          <div style={styles.statItem}>
-            <h3 style={styles.statValue}>10,000+</h3>
-            <p style={styles.statLabel}>Active Users</p>
-          </div>
-          <div style={styles.statItem}>
-            <h3 style={styles.statValue}>500+</h3>
-            <p style={styles.statLabel}>Brands Onboard</p>
-          </div>
-          <div style={styles.statItem}>
-            <h3 style={styles.statValue}>87%</h3>
-            <p style={styles.statLabel}>Resolution Rate</p>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
+      {/* CTA Section - Update this part */}
       <section style={styles.cta}>
         <h2>Ready to Make Your Voice Heard?</h2>
         <p style={styles.ctaSubtitle}>Join thousands of consumers who are getting their complaints resolved faster</p>
         <div style={styles.ctaButtons}>
-          <a href="/user/signup" style={styles.ctaBtnPrimary}>Join Now - It's Free</a>
-          <a href="/brand/login" style={styles.ctaBtnSecondary}>For Brands</a>
+          <Link to="/user/signup" style={styles.ctaBtnPrimary}>Join Now - It's Free</Link>
+          <Link to="/brand/login" style={styles.ctaBtnSecondary}>For Brands</Link>
         </div>
       </section>
 
-      {/* Footer */}
+      {/* Footer - Update the links */}
       <footer style={styles.footer}>
         <div style={styles.footerLinks}>
-          <a href="/about" style={styles.footerLink}>About Us</a>
-          <a href="/how-it-works" style={styles.footerLink}>How It Works</a>
-          <a href="/privacy" style={styles.footerLink}>Privacy Policy</a>
-          <a href="/terms" style={styles.footerLink}>Terms of Service</a>
-          <a href="/contact" style={styles.footerLink}>Contact</a>
+          <Link to="/about" style={styles.footerLink}>About Us</Link>
+          <Link to="/how-it-works" style={styles.footerLink}>How It Works</Link>
+          <Link to="/privacy" style={styles.footerLink}>Privacy Policy</Link>
+          <Link to="/terms" style={styles.footerLink}>Terms of Service</Link>
+          <Link to="/contact" style={styles.footerLink}>Contact</Link>
         </div>
         <p style={styles.copyright}>&copy; 2024 ComplaintHub. All rights reserved.</p>
       </footer>

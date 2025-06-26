@@ -1,0 +1,42 @@
+/* Add hover effects */
+input:focus {
+  border-color: #3498db !important;
+  background-color: white !important;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+button:hover:not(:disabled) {
+  background-color: #2980b9 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.social-btn:hover {
+  border-color: #3498db !important;
+  background-color: #f8f9fa !important;
+}
+
+a:hover {
+  text-decoration: underline !important;
+}
+
+/* Add fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-card {
+  animation: fadeIn 0.4s ease-out;
+}
