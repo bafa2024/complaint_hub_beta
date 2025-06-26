@@ -1,6 +1,12 @@
+# backend/app/schemas.py
+
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 from datetime import datetime
+
+# ─────────────────────────────────────────────────────────────────────────────
+# User schemas
+# ─────────────────────────────────────────────────────────────────────────────
 
 class UserCreate(BaseModel):
     name: str
@@ -8,7 +14,7 @@ class UserCreate(BaseModel):
     phone: str
     password: str
 
-class UserOut(BaseModel):
+class UserRead(BaseModel):
     id: int
     name: str
     email: EmailStr
@@ -18,15 +24,19 @@ class UserOut(BaseModel):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True  # <-- replaces orm_mode in Pydantic V2
 
 class UserLogin(BaseModel):
-    email: str
+    email: EmailStr
     password: str
 
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Ticket schemas
+# ─────────────────────────────────────────────────────────────────────────────
 
 class TicketCreate(BaseModel):
     brand_id: int
@@ -51,4 +61,4 @@ class TicketOut(BaseModel):
     resolved_at: Optional[datetime]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
