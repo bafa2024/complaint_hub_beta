@@ -1,5 +1,23 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import sentry_sdk
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+
+sentry_sdk.init(dsn=settings.SENTRY_DSN)
+app = SentryAsgiMiddleware(app)
+# Use Celery for background tasks
+from celery import Celery
+
+celery_app = Celery(
+    "complainthub",
+    broker=settings.REDIS_URL,
+    backend=settings.REDIS_URL
+)
+
+@celery_app.task
+def send_follow_up_call(ticket_id: int):
+    # Implementation
+    pass
 
 app = FastAPI()
 
