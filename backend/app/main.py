@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import sentry_sdk
-from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
-
-sentry_sdk.init(dsn=settings.SENTRY_DSN)
-app = SentryAsgiMiddleware(app)
+#from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+#
+#sentry_sdk.init(dsn=settings.SENTRY_DSN)
+#app = SentryAsgiMiddleware(app)
 # Use Celery for background tasks
 from celery import Celery
 
