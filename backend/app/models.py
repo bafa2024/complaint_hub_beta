@@ -1,9 +1,20 @@
 # backend/app/models/brand.py
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Float, Boolean, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from app.db.base_class import Base
 from datetime import datetime
 
+class User(Base):
+    __tablename__ = "users"
+
+    id          = Column(Integer, primary_key=True, index=True)
+    email       = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    created_at  = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+    # If you want a backref from Ticket:
+    tickets     = relationship("Ticket", back_populates="user")
+    
 class Brand(Base):
     __tablename__ = "brands"
     
@@ -122,8 +133,13 @@ class BrandIntegration(Base):
 # Update the existing Ticket model to include new fields
 # backend/app/models/ticket.py (additions)
 class Ticket(Base):
-    # ... existing fields ...
+    __tablename__ = "tickets"
     
+    id = Column(Integer, primary_key=True, index=True)
+
+    # New fields
+    brand_id = Column(Integer, ForeignKey("brands.id"))
+    assigned_to_id = Column(Integer, ForeignKey("brand_users.id"), nullable=True)
     # New fields
     brand_id = Column(Integer, ForeignKey("brands.id"))
     assigned_to_id = Column(Integer, ForeignKey("brand_users.id"), nullable=True)
