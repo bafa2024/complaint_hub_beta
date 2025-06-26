@@ -6,3 +6,4 @@ pydantic
 passlib[bcrypt]
 python-jose[cryptography]
 python-dotenv
+sentry-sdk>=1.10.0
