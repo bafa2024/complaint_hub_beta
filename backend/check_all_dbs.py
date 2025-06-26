@@ -51,24 +51,3 @@ def signup(data: schemas.UserCreate, db: Session = Depends(get_db)):
     
     # Return the created user
     return user
-
-@router.post("/login", response_model=schemas.Token)
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    logger.info(f"Login attempt for user: {form_data.username}")
-    
-    user = crud.get_user_by_email(db, form_data.username)
-    if not user or not verify_password(form_data.password, user.hashed_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    token = create_access_token(
-        {"sub": user.email}, expires_delta=expires
-    )
-    return {"access_token": token, "token_type": "bearer"}
-
-@router.get("/me", response_model=schemas.UserRead)
-def read_me(current_user = Depends(get_current_user)):
-    return current_user
