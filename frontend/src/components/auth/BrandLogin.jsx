@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import authService from '../../services/authService';
 
 export default function BrandLogin() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -16,9 +18,14 @@ export default function BrandLogin() {
     setMessage('');
     
     try {
-      // Note: brandLogin endpoint needs to be implemented in backend
-      await authService.brandLogin(form.email, form.password);
-      window.location.href = '/brand/dashboard';
+      const response = await authService.brandLogin(form.email, form.password);
+      
+      // Store the token
+      localStorage.setItem('token', response.access_token);
+      localStorage.setItem('userRole', 'brand');
+      
+      // Navigate to brand dashboard
+      navigate('/brand/dashboard');
     } catch (error) {
       setMessage(error.response?.data?.detail || 'Login failed. Please check your credentials.');
     } finally {
@@ -51,70 +58,72 @@ export default function BrandLogin() {
             <div style={styles.errorMessage}>{message}</div>
           )}
           
-          <div style={styles.formContainer}>
-            <div style={styles.formGroup}>
-              <label style={styles.formLabel}>Business Email</label>
-              <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                style={styles.formControl}
-                placeholder="admin@yourcompany.com"
-                required
-              />
-            </div>
-            
-            <div style={styles.formGroup}>
-              <label style={styles.formLabel}>Password</label>
-              <input
-                type="password"
-                name="password"
-                value={form.password}
-                onChange={handleChange}
-                style={styles.formControl}
-                placeholder="Enter password"
-                required
-              />
-              <a href="/brand/forgot-password" style={styles.forgotLink}>
-                Forgot Password?
-              </a>
-            </div>
-            
-            <div style={styles.formCheckbox}>
-              <input type="checkbox" id="remember" style={styles.checkbox} />
-              <label htmlFor="remember" style={styles.checkboxLabel}>
-                Remember this device
-              </label>
-            </div>
-            
-            <button 
-              onClick={handleSubmit}
-              style={styles.btnPrimary}
-              disabled={loading}
-            >
-              {loading ? 'Logging in...' : 'Login to Dashboard'}
-            </button>
-            
-            <div style={styles.helpLinks}>
-              <a href="/help" style={styles.helpLink}>Need Help?</a>
-              <a href="/contact" style={styles.helpLink}>Contact Support</a>
-            </div>
-            
-            <div style={styles.authFooter}>
-              New to ComplaintHub? <a href="/brand/signup" style={styles.signupLink}>Register Your Brand</a>
-            </div>
-            
-            <div style={styles.demoSection}>
-              <button onClick={handleDemoLogin} style={styles.demoButton}>
-                Load Demo Credentials
+          <form onSubmit={handleSubmit}>
+            <div style={styles.formContainer}>
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Business Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  style={styles.formControl}
+                  placeholder="admin@yourcompany.com"
+                  required
+                />
+              </div>
+              
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  style={styles.formControl}
+                  placeholder="Enter password"
+                  required
+                />
+                <a href="/brand/forgot-password" style={styles.forgotLink}>
+                  Forgot Password?
+                </a>
+              </div>
+              
+              <div style={styles.formCheckbox}>
+                <input type="checkbox" id="remember" style={styles.checkbox} />
+                <label htmlFor="remember" style={styles.checkboxLabel}>
+                  Remember this device
+                </label>
+              </div>
+              
+              <button 
+                type="submit"
+                style={styles.btnPrimary}
+                disabled={loading}
+              >
+                {loading ? 'Logging in...' : 'Login to Dashboard'}
               </button>
+              
+              <div style={styles.helpLinks}>
+                <a href="/help" style={styles.helpLink}>Need Help?</a>
+                <a href="/contact" style={styles.helpLink}>Contact Support</a>
+              </div>
+              
+              <div style={styles.authFooter}>
+                New to ComplaintHub? <a href="/brand/signup" style={styles.signupLink}>Register Your Brand</a>
+              </div>
+              
+              <div style={styles.demoSection}>
+                <button type="button" onClick={handleDemoLogin} style={styles.demoButton}>
+                  Load Demo Credentials
+                </button>
+              </div>
+              
+              <div style={styles.securityInfo}>
+                🔒 Secure Business Portal • Enterprise-grade Security • SSL Encrypted
+              </div>
             </div>
-            
-            <div style={styles.securityInfo}>
-              🔒 Secure Business Portal • Enterprise-grade Security • SSL Encrypted
-            </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
@@ -192,6 +201,7 @@ const styles = {
     borderRadius: '6px',
     fontSize: '14px',
     transition: 'all 0.3s',
+    boxSizing: 'border-box',
   },
   forgotLink: {
     display: 'block',

@@ -20,7 +20,7 @@ import UserSettings from './components/user/UserSettings';
 
 // Brand Pages
 import BrandDashboard from './components/brand/BrandDashboard';
-import BrandTickets from './components/brand/BrandTickets';
+import BrandTickets from './components/brand/BrandTicketDetail';
 import BrandTicketDetail from './components/brand/BrandTicketDetail';
 import BrandAnalytics from './components/brand/BrandAnalytics';
 import BrandBilling from './components/brand/BrandBilling';
